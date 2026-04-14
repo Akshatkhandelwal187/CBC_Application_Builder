@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Read", "Write", "Edit", "Glob", "Grep",
+      "Bash(npm *)", "Bash(npx *)", "Bash(pnpm *)", "Bash(yarn *)",
+      "Bash(uv *)", "Bash(python *)", "Bash(pip *)", "Bash(pytest *)",
+      "Bash(docker *)", "Bash(git *)", "Bash(mkdir *)", "Bash(cp *)", "Bash(mv *)",
+      "Bash(curl *)", "Bash(ls *)", "Bash(cat *)",
+      "mcp__filesystem__*", "mcp__playwright__*", "mcp__github__*"
+    ],
+    "deny": ["Bash(sudo *)", "Bash(rm -rf /*)"]
+  },
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}" }
+    }
+  },
+  "hooks": {
+    "SessionStart": [{ "matcher": "", "hooks": [{ "type": "command", "command": "./.claude/hooks/session-start.sh" }] }],
+    "PostToolUse": [{ "matcher": "Write", "hooks": [{ "type": "command", "command": "./.claude/hooks/post-write-audit.sh" }] }]
+  },
+  "defaultModel": "claude-sonnet-4-5"
+}
